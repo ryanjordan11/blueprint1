@@ -3,9 +3,10 @@ import { Mail, CheckCircle, ArrowRight, Zap, Target, Flame, Layout, Send, BookOp
 import { motion, AnimatePresence } from 'framer-motion';
 
 const App = () => {
-  const [view, setView] = useState('landing'); // 'landing' or 'success'
+  const [view, setView] = useState('landing');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  const [videoStarted, setVideoStarted] = useState(false);
 
   const handleLandingSubmit = (e) => {
     e.preventDefault();
@@ -204,7 +205,7 @@ const App = () => {
               </p>
             </div>
 
-            {/* VIDEO PLAYER PLACEHOLDER */}
+            {/* VIDEO PLAYER */}
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -212,37 +213,36 @@ const App = () => {
               className="relative group mb-16"
             >
               <div className="absolute inset-0 bg-red-600 translate-x-4 translate-y-4 -z-10" />
-              <div className="aspect-video bg-black border-4 border-black relative overflow-hidden flex items-center justify-center shadow-2xl">
-                <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-slate-700 via-slate-900 to-black" />
-                
-                {/* Play Button Overlay */}
-                <div className="relative z-10 text-center px-6">
-                  <motion.div 
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    className="w-28 h-28 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-black shadow-lg cursor-pointer"
-                  >
-                    <Play className="w-12 h-12 text-black fill-current translate-x-1" />
-                  </motion.div>
-                  <h2 className="text-white font-black text-2xl md:text-5xl uppercase tracking-tighter leading-none mb-2">
-                    WATCH THE <span className="text-yellow-400 italic">IMPLEMENTATION</span> GUIDE
-                  </h2>
-                  <p className="text-slate-400 font-bold text-sm uppercase tracking-widest">
-                    Installing the 5-step machine in 48 hours.
-                  </p>
-                </div>
-
-                {/* Status Bar */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-black/70 border-t-2 border-white/10 flex items-center gap-4">
-                  <div className="h-1.5 bg-white/20 flex-grow rounded-full overflow-hidden">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: "42%" }}
-                      transition={{ duration: 3, delay: 1 }}
-                      className="h-full bg-red-600"
-                    />
-                  </div>
-                  <span className="text-[10px] font-mono text-white/70">02:18 / 05:45</span>
-                </div>
+              <div className="aspect-video bg-black border-4 border-black relative overflow-hidden shadow-2xl">
+                {!videoStarted ? (
+                  <>
+                    <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-slate-700 via-slate-900 to-black" />
+                    <div className="relative z-10 text-center px-6 h-full flex flex-col items-center justify-center">
+                      <motion.button 
+                        onClick={() => setVideoStarted(true)}
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="w-28 h-28 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-black shadow-lg cursor-pointer"
+                      >
+                        <Play className="w-12 h-12 text-black fill-current translate-x-1" />
+                      </motion.button>
+                      <h2 className="text-white font-black text-2xl md:text-5xl uppercase tracking-tighter leading-none mb-2">
+                        WATCH THE <span className="text-yellow-400 italic">IMPLEMENTATION</span> GUIDE
+                      </h2>
+                      <p className="text-slate-400 font-bold text-sm uppercase tracking-widest">
+                        Installing the 5-step machine in 48 hours.
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <iframe 
+                    className="w-full h-full"
+                    src="https://www.youtube.com/embed/UpGILqnAT8w?autoplay=1"
+                    title="Implementation Guide"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                )}
               </div>
             </motion.div>
 
