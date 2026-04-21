@@ -125,17 +125,17 @@ const App = () => {
               </div>
 
               {/* Visual Asset Side */}
-              <motion.div 
+              <motion.div
                 className="hidden md:block md:col-span-4"
                 initial={{ opacity: 0, rotate: 10, x: 50 }}
                 animate={{ opacity: 1, rotate: 0, x: 0 }}
                 transition={{ duration: 1, type: "spring" }}
               >
                 <div className="relative group">
-                  <motion.div 
+                  <motion.div
                     animate={{ x: [4, 8, 4], y: [4, 0, 4] }}
                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute inset-0 bg-yellow-400 translate-x-4 translate-y-4 -z-10 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" 
+                    className="absolute inset-0 bg-yellow-400 translate-x-4 translate-y-4 -z-10 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
                   />
                   <div className="bg-black text-white p-8 aspect-[3/4] flex flex-col justify-between border-4 border-black relative z-10">
                     <BookOpen className="w-12 h-12 text-yellow-400" />
@@ -155,7 +155,7 @@ const App = () => {
                 <motion.h2 {...fadeInUp} className="text-4xl font-black mb-16 uppercase text-center tracking-tighter">
                   The Brutal Truth
                 </motion.h2>
-                <motion.div 
+                <motion.div
                   variants={staggerContainer}
                   initial="initial"
                   whileInView="whileInView"
@@ -192,8 +192,8 @@ const App = () => {
             className="max-w-5xl mx-auto px-6 pt-12 pb-24"
           >
             <div className="text-center mb-16">
-              <motion.div 
-                initial={{ scale: 0, rotate: -45 }} 
+              <motion.div
+                initial={{ scale: 0, rotate: -45 }}
                 animate={{ scale: 1, rotate: 0 }}
                 className="w-20 h-20 bg-green-500 border-4 border-black flex items-center justify-center mx-auto mb-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
               >
@@ -206,7 +206,7 @@ const App = () => {
             </div>
 
             {/* VIDEO PLAYER */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
@@ -218,7 +218,7 @@ const App = () => {
                   <>
                     <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-slate-700 via-slate-900 to-black" />
                     <div className="relative z-10 text-center px-6 h-full flex flex-col items-center justify-center">
-                      <motion.button 
+                      <motion.button
                         onClick={() => setVideoStarted(true)}
                         whileHover={{ scale: 1.1, rotate: 5 }}
                         whileTap={{ scale: 0.95 }}
@@ -235,13 +235,15 @@ const App = () => {
                     </div>
                   </>
                 ) : (
-                  <iframe 
-                    className="w-full h-full"
-                    src="https://www.youtube.com/embed/UpGILqnAT8w?autoplay=1"
-                    title="Implementation Guide"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
+                  <video
+                    className="w-full h-full object-contain"
+                    controls
+                    autoPlay
+                    playsInline
+                  >
+                    <source src="/The_Facebook_Virality_Code.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
                 )}
               </div>
             </motion.div>
@@ -253,7 +255,7 @@ const App = () => {
                 { title: "The Slide Deck", meta: "Visual Presentation", icon: Layout },
                 { title: "The Hook Vault", meta: "99+ Top Templates", icon: Zap }
               ].map((item, i) => (
-                <motion.div 
+                <motion.div
                   key={i}
                   whileHover={{ y: -5, borderColor: '#000' }}
                   className="bg-white border-4 border-slate-100 p-6 flex items-center gap-4 transition-all group cursor-pointer"
