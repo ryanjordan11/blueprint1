@@ -192,14 +192,16 @@ const App = () => {
             className="max-w-5xl mx-auto px-6 pt-12 pb-24"
           >
             <div className="text-center mb-16">
-              <motion.div
-                initial={{ scale: 0, rotate: -45 }}
-                animate={{ scale: 1, rotate: 0 }}
-                className="w-20 h-20 bg-green-500 border-4 border-black flex items-center justify-center mx-auto mb-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
-              >
-                <CheckCircle className="text-white w-12 h-12" />
-              </motion.div>
-              <h1 className="text-5xl md:text-7xl font-black mb-4 uppercase tracking-tighter">Access Granted.</h1>
+              <h1 className="text-5xl md:text-7xl font-black mb-4 uppercase tracking-tighter flex items-center justify-center gap-4">
+                <motion.div
+                  initial={{ scale: 0, rotate: -45 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  className="w-16 h-16 md:w-20 md:h-20 bg-green-500 border-4 border-black flex items-center justify-center shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+                >
+                  <CheckCircle className="text-white w-10 h-10 md:w-12 md:h-12" />
+                </motion.div>
+                Access Granted.
+              </h1>
               <p className="text-xl text-slate-500 font-medium italic">
                 The blueprint has been sent to <span className="text-black font-bold underline decoration-yellow-400">{email}</span>. Start with the guide below.
               </p>
@@ -241,7 +243,7 @@ const App = () => {
                     autoPlay
                     playsInline
                   >
-                    <source src="/The_Facebook_Virality_Code.mp4" type="video/mp4" />
+                    <source src="/Strategic_Marketing_Blueprint.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                 )}
