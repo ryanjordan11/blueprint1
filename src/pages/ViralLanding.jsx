@@ -27,22 +27,27 @@ const ViralLanding = () => {
           style={{ 
             display: 'block', 
             margin: '0 auto', 
-            paddingTop: '60vh',
+            paddingTop: '10vh',
             opacity: opacity,
             transition: 'opacity 0.1s'
           }}
         />
         <div style={{ 
           position: 'absolute', 
-          top: '50%', 
+          top: '30%', 
           left: '50%', 
           transform: 'translate(-50%, -50%)',
           textAlign: 'center',
-          color: 'white'
+          color: 'white',
+          width: '100%',
+          padding: '0 20px'
         }}>
-          <h1 style={{ fontSize: 'clamp(24px, 5vw, 60px)', fontWeight: 'bold', maxWidth: '800px', lineHeight: '1.2' }}>
-            The world's most advanced engine for building and scaling AI influencers.
+          <h1 style={{ fontSize: 'clamp(24px, 5vw, 60px)', fontWeight: 'bold', maxWidth: '800px', lineHeight: '1.2', margin: '0 auto' }}>
+            A System That Shows You Exactly What to Post on Facebook
           </h1>
+          <p style={{ fontSize: 'clamp(16px, 2vw, 24px)', fontWeight: 'normal', maxWidth: '600px', marginTop: '24px', color: '#888', margin: '24px auto 0' }}>
+            No guessing. Just content built from what actually gets reach and engagement.
+          </p>
         </div>
       </div>
 
