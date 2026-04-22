@@ -18,9 +18,8 @@ const ViralLanding = () => {
       <img 
         src="/vmn7lN1z2X1oPWlzb8KcjKhWcHY.png" 
         alt="AI Influencer"
-        className="w-full h-auto min-h-screen"
       />
-      <div className="fixed bottom-20 left-0 right-0 flex justify-center">
+      <div className="fixed bottom-8 left-0 right-0 flex justify-center">
         <form onSubmit={handleSubmit} className="flex gap-0">
           <input
             type="email"
@@ -28,12 +27,12 @@ const ViralLanding = () => {
             placeholder="Enter your email..."
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="bg-white/90 border-2 border-black py-3 px-4 text-black placeholder-gray-600 w-64 focus:outline-none"
+            className="bg-white border-2 border-black py-3 px-4 text-black placeholder-gray-600 w-64"
           />
           <button
             type="submit"
             disabled={loading}
-            className="bg-black text-white font-bold px-6 py-3 uppercase"
+            className="bg-black text-white font-bold px-6 py-3"
           >
             {loading ? "..." : "Start"}
           </button>
