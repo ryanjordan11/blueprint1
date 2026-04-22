@@ -14,30 +14,33 @@ const ViralLanding = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black">
-      <img 
-        src="/vmn7lN1z2X1oPWlzb8KcjKhWcHY.png" 
-        alt="AI Influencer"
-      />
-      <div className="fixed bottom-8 left-0 right-0 flex justify-center">
-        <form onSubmit={handleSubmit} className="flex gap-0">
-          <input
-            type="email"
-            required
-            placeholder="Enter your email..."
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="bg-white border-2 border-black py-3 px-4 text-black placeholder-gray-600 w-64"
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-black text-white font-bold px-6 py-3"
-          >
-            {loading ? "..." : "Start"}
-          </button>
-        </form>
+    <div className="min-h-screen bg-black flex flex-col items-center justify-center">
+      <div style={{
+        boxShadow: '0 0 60px 20px rgba(255,255,255,0.15), 0 0 100px 40px rgba(255,255,255,0.1)',
+        marginBottom: '2rem'
+      }}>
+        <img 
+          src="/vmn7lN1z2X1oPWlzb8KcjKhWcHY.png" 
+          alt="AI Influencer"
+        />
       </div>
+      <form onSubmit={handleSubmit} className="flex gap-0">
+        <input
+          type="email"
+          required
+          placeholder="Enter your email..."
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          style={{background:'white', border:'2px solid #333', padding:'12px 16px', color:'black', width:'260px'}}
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          style={{background:'white', color:'black', fontWeight:'bold', padding:'12px 24px', border:'2px solid #333', borderLeft:'none'}}
+        >
+          {loading ? "..." : "Start"}
+        </button>
+      </form>
     </div>
   );
 };
