@@ -15,15 +15,11 @@ const ViralLanding = () => {
 
   return (
     <div className="min-h-screen bg-black flex flex-col items-center justify-center">
-      <div style={{
-        boxShadow: '0 0 60px 20px rgba(255,255,255,0.15), 0 0 100px 40px rgba(255,255,255,0.1)',
-        marginBottom: '2rem'
-      }}>
-        <img 
-          src="/vmn7lN1z2X1oPWlzb8KcjKhWcHY.png" 
-          alt="AI Influencer"
-        />
-      </div>
+      <img 
+        src="/vmn7lN1z2X1oPWlzb8KcjKhWcHY.png" 
+        alt="AI Influencer"
+        style={{ marginBottom: '2rem' }}
+      />
       <form onSubmit={handleSubmit} className="flex gap-0">
         <input
           type="email"
