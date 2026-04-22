@@ -18,7 +18,7 @@ const ViralLanding = () => {
       <img 
         src="/vmn7lN1z2X1oPWlzb8KcjKhWcHY.png" 
         alt="AI Influencer"
-        className="w-full h-screen object-cover"
+        className="w-full h-auto min-h-screen"
       />
       <div className="fixed bottom-20 left-0 right-0 flex justify-center">
         <form onSubmit={handleSubmit} className="flex gap-0">
