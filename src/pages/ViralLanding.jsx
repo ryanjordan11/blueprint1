@@ -18,7 +18,7 @@ const ViralLanding = () => {
       <img 
         src="/vmn7lN1z2X1oPWlzb8KcjKhWcHY.png" 
         alt="AI Influencer"
-        style={{ marginTop: '8rem', marginBottom: '2rem' }}
+        style={{ marginTop: '15vh', marginBottom: '2rem' }}
       />
       <form onSubmit={handleSubmit} className="flex gap-0">
         <input
