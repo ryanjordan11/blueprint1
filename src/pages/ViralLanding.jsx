@@ -6,7 +6,7 @@ const ViralLanding = () => {
       <img 
         src="/vmn7lN1z2X1oPWlzb8KcjKhWcHY.png" 
         alt="AI Influencer"
-        style={{ marginTop: '30vh' }}
+        style={{ marginTop: '45vh' }}
       />
     </div>
   );
