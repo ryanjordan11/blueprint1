@@ -8,6 +8,7 @@ const ViralLanding = () => {
         alt="AI Influencer"
         style={{ marginTop: '60vh' }}
       />
+      <div style={{ height: '50vh' }}></div>
     </div>
   );
 };
