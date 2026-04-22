@@ -18,38 +18,35 @@ const ViralLanding = () => {
   ];
 
   return (
-    <div className="bg-black min-h-screen">
+      <div className="bg-black min-h-screen">
       {/* Hero Section */}
-      <div className="relative min-h-screen flex flex-col items-center justify-center">
-        <img 
-          src="/vmn7lN1z2X1oPWlzb8KcjKhWcHY.png" 
-          alt="AI Influencer"
-          style={{ 
-            display: 'block', 
-            margin: '0 auto', 
-            paddingTop: '10vh',
-            opacity: opacity,
-            transition: 'opacity 0.1s'
-          }}
-        />
-        <div style={{ 
-          position: 'absolute', 
-          top: '30%', 
-          left: '50%', 
-          transform: 'translate(-50%, -50%)',
-          textAlign: 'center',
-          color: 'white',
-          width: '100%',
-          padding: '0 20px'
-        }}>
-          <h1 style={{ fontSize: 'clamp(24px, 5vw, 60px)', fontWeight: 'bold', maxWidth: '800px', lineHeight: '1.2', margin: '0 auto' }}>
-            A System That Shows You Exactly What to Post on Facebook
+      <div className="relative min-h-screen flex flex-col overflow-x-hidden">
+        <div className="w-full px-6 pt-10 md:pt-20">
+          <div className="max-w-6xl mx-auto">
+          <h1 style={{ fontSize: 'clamp(32px, 6vw, 72px)', fontWeight: 'bold', maxWidth: '900px', lineHeight: '1.1', color: 'white', textAlign: 'left' }}>
+            Let's cut the bullshit.<br/>
+            <span style={{ color: 'white' }}>You're getting ignored because you're posting the wrong shit.</span>
           </h1>
-          <p style={{ fontSize: 'clamp(16px, 2vw, 24px)', fontWeight: 'normal', maxWidth: '600px', marginTop: '24px', color: '#888', margin: '24px auto 0' }}>
-            No guessing. Just content built from what actually gets reach and engagement.
-          </p>
+          <div style={{ fontSize: 'clamp(16px, 2vw, 22px)', maxWidth: '700px', color: '#999', lineHeight: '1.4', margin: '20px 0 0' }}>
+            Even people with 20,000+ followers are getting nothing right now.<br/>
+            No reach. No comments. No sales. Because they're not using the hooks Facebook actually pushes. I spent six months, analyzed millions of posts, and found the exact patterns that work.
+            I turned it into a system. Now you don't guess, you run what already works.
+          </div>
+          </div>
         </div>
+
+        <img
+          src="/vmn7lN1z2X1oPWlzb8KcjKhWcHY.png"
+          alt="AI Influencer"
+          className="mt-auto w-screen max-w-none h-[45vh] md:h-[50vh] object-contain object-bottom"
+          style={{ display: 'block', margin: 0, opacity: opacity, transition: 'opacity 0.1s' }}
+        />
       </div>
+
+      {/* Section Below Hero (pushes pricing down) */}
+      <section className="bg-black min-h-screen px-4">
+        <div className="max-w-6xl mx-auto h-full" />
+      </section>
 
       {/* Pricing Section */}
       <div className="py-24 px-4">
