@@ -24,6 +24,20 @@ const ViralLanding = () => {
           transition: 'opacity 0.1s'
         }}
       />
+      <div style={{ 
+        position: 'absolute', 
+        top: '50%', 
+        left: '50%', 
+        transform: 'translate(-50%, -50%)',
+        textAlign: 'center',
+        color: 'white',
+        opacity: opacity,
+        transition: 'opacity 0.1s'
+      }}>
+        <h1 style={{ fontSize: 'clamp(24px, 5vw, 60px)', fontWeight: 'bold', maxWidth: '800px', lineHeight: '1.2' }}>
+          The world's most advanced engine for building and scaling AI influencers. From pixel-perfect visuals to autonomous voice, we build the icons of tomorrow.
+        </h1>
+      </div>
       <div style={{ height: '100vh' }}></div>
       <div style={{ height: '100vh' }}></div>
       <div style={{ height: '100vh' }}></div>
