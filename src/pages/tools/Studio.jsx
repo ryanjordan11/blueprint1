@@ -18,18 +18,172 @@ const Studio = () => {
   const [generated, setGenerated] = useState({});
   const [error, setError] = useState('');
 
-  const buildPrompt = (template) => {
-    return `Viral Facebook meme image. Square format 1:1. Hyper-real cinematic style. Strong emotion (sadness, crying, disbelief). High contrast lighting. Extremely clear on mobile. Centered subject. No clutter. Viral Facebook meme style.
+  const buildPrompt = () => {
+    return `You are a viral Facebook image generator.
 
-SCENE: A CEO matching the industry of ${template.target} reacts emotionally upset beside a dark gravestone. Gravestone text MUST say: "R.I.P. ${template.target}". Include subtle visual cues of the industry (UI elements, tools, icons, screens).
+You MUST generate a COMPLETE image (not a prompt).
 
-LOGO RULE: Include the official recognizable logo of ${template.target} near the headline or gravestone. Do NOT distort or over-enlarge the logo.
+Square format. No explanations. Output image only.
 
-TEXT ON IMAGE: Big bold white headline below center: "RIP ${template.target}". Sub headline white with neon green, 3-6 words max, disruptive. Add a red "BREAKING" banner (top right). Highlight 1-2 key words subheadline in neon green. Text must be LARGE and readable on mobile.
+---
 
-VISUAL STYLE: Dramatic lighting. Shallow depth of field. Cinematic realism (NOT cartoon). Clean composition. Strong contrast between subject and background.
+TOPIC: [auto-generate]
+TARGET: [auto-generate from known tools/brands]
+AUDIENCE: [auto-generate]
 
-GOAL: High-performing viral Facebook marketing image that stops scrolling instantly.`;
+Choose ONE randomly:
+TOPIC/TARGET/AUDIENCE options:
+TOPIC: AI automation / TARGET: ChatGPT / AUDIENCE: content creators
+
+TOPIC: AI productivity / TARGET: Excel / AUDIENCE: business owners
+
+TOPIC: AI video editing / TARGET: CapCut / AUDIENCE: short-form creators
+
+TOPIC: AI search / TARGET: Google / AUDIENCE: everyday users
+
+TOPIC: AI assistants / TARGET: Gemini / AUDIENCE: tech users
+
+TOPIC: AI business tools / TARGET: Claude / AUDIENCE: entrepreneurs
+
+TOPIC: AI design / TARGET: Canva / AUDIENCE: online marketers
+
+TOPIC: AI video gen / TARGET: video editors / AUDIENCE: creators
+
+TOPIC: AI coding / TARGET: developers / AUDIENCE: programmers
+
+TOPIC: AI growth / TARGET: Instagram / AUDIENCE: influencers
+
+TOPIC: AI funnels / TARGET: landing pages / AUDIENCE: marketers
+
+TOPIC: AI outreach / TARGET: cold DMs / AUDIENCE: sales people
+
+TOPIC: AI writing / TARGET: copywriters / AUDIENCE: freelancers
+
+TOPIC: AI ads / TARGET: Facebook ads / AUDIENCE: advertisers
+
+TOPIC: AI SEO / TARGET: Google rankings / AUDIENCE: bloggers
+
+TOPIC: AI sales / TARGET: sales reps / AUDIENCE: closers
+
+TOPIC: AI content / TARGET: posting manually / AUDIENCE: creators
+
+TOPIC: AI branding / TARGET: personal brands / AUDIENCE: beginners
+
+TOPIC: AI income / TARGET: 9–5 jobs / AUDIENCE: employees
+
+TOPIC: AI business / TARGET: agencies / AUDIENCE: agency owners
+
+TOPIC: AI tools / TARGET: Zapier / AUDIENCE: automation users
+
+TOPIC: AI tools / TARGET: Notion / AUDIENCE: productivity users
+
+TOPIC: AI tools / TARGET: Midjourney / AUDIENCE: designers
+
+TOPIC: AI tools / TARGET: Photoshop / AUDIENCE: creatives
+
+TOPIC: AI tools / TARGET: Illustrator / AUDIENCE: designers
+
+TOPIC: AI tools / TARGET: Premiere Pro / AUDIENCE: video editors
+
+TOPIC: AI tools / TARGET: Final Cut / AUDIENCE: editors
+
+TOPIC: AI tools / TARGET: TikTok editing / AUDIENCE: creators
+
+TOPIC: AI tools / TARGET: YouTube editing / AUDIENCE: YouTubers
+
+TOPIC: AI tools / TARGET: blogging / AUDIENCE: writers
+
+TOPIC: AI disruption / TARGET: freelancers / AUDIENCE: gig workers
+
+TOPIC: AI disruption / TARGET: virtual assistants / AUDIENCE: VAs
+
+TOPIC: AI disruption / TARGET: social media managers / AUDIENCE: marketers
+
+TOPIC: AI disruption / TARGET: email marketing / AUDIENCE: business owners
+
+TOPIC: AI disruption / TARGET: customer support / AUDIENCE: companies
+
+TOPIC: AI disruption / TARGET: data entry / AUDIENCE: beginners
+
+TOPIC: AI disruption / TARGET: research / AUDIENCE: students
+
+TOPIC: AI disruption / TARGET: online courses / AUDIENCE: coaches
+
+TOPIC: AI disruption / TARGET: consulting / AUDIENCE: consultants
+
+TOPIC: AI disruption / TARGET: coaching / AUDIENCE: coaches
+
+TOPIC: AI money / TARGET: side hustles / AUDIENCE: beginners
+
+TOPIC: AI money / TARGET: dropshipping / AUDIENCE: ecom users
+
+TOPIC: AI money / TARGET: affiliate marketing / AUDIENCE: affiliates
+
+TOPIC: AI money / TARGET: lead gen / AUDIENCE: agencies
+
+TOPIC: AI money / TARGET: SMMA / AUDIENCE: marketers
+
+TOPIC: AI money / TARGET: course creators / AUDIENCE: educators
+
+TOPIC: AI money / TARGET: digital products / AUDIENCE: creators
+
+TOPIC: AI money / TARGET: manual outreach / AUDIENCE: sales
+
+TOPIC: AI money / TARGET: cold calling / AUDIENCE: closers
+
+TOPIC: AI money / TARGET: traditional marketing / AUDIENCE: businesses
+
+Pick ONE and proceed.
+
+---
+
+IMAGE REQUIREMENTS:
+- hyper-real cinematic style
+- strong emotion (sadness, crying, disbelief)
+- high contrast lighting
+- extremely clear on mobile
+- centered subject
+- no clutter
+- viral Facebook meme style
+
+---
+
+SCENE:
+- Use a PERSON that matches the industry of the TARGET
+  (EXAMPLES: CEO for tech, ceo for content tools, ceo for Canva, ceo for CapCut)
+- Show them reacting emotionally upset beside a gravestone
+- Gravestone text MUST say: “R.I.P. [TARGET]”
+- Include subtle visual cues of the industry (UI elements, tools, icons, screens)
+
+---
+
+LOGO RULE:
+- Include the official recognizable logo of the TARGET
+- Place it subtly near the headline or gravestone
+- Do NOT distort or over-enlarge the logo
+
+---
+
+TEXT ON IMAGE:
+- Big bold white headline below center: “RIP [TARGET]”
+- sub headline white with neon green or yellow or red, or purple  subheadline: 3–6 words max, disruptive
+- Add a red “BREAKING” banner (top right or left ore center)
+- Highlight 1–2 key words subheadline in neon green, yellow, red, or purple
+- Text must be LARGE and readable on mobile
+
+---
+
+VISUAL STYLE:
+- dramatic lighting
+- shallow depth of field
+- cinematic realism (NOT cartoon, NOT over-AI polished)
+- clean composition
+- strong contrast between subject and background
+
+---
+
+GOAL:
+Make it look like a HIGH-PERFORMING viral Facebook marketing image that stops scrolling instantly.`;
   };
 
   const handleGenerate = async (template) => {
@@ -37,7 +191,7 @@ GOAL: High-performing viral Facebook marketing image that stops scrolling instan
     setError('');
     
     try {
-      const prompt = buildPrompt(template);
+      const prompt = buildPrompt();
       const url = await generateImage(prompt);
       setGenerated(prev => ({ ...prev, [template.id]: url }));
     } catch (err) {
