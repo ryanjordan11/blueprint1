@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gemini Productivity Pack — RACF System</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f8f6f2;
+      --ink: #1c1a17;
+      --ink-2: #4a4741;
+      --ink-3: #9b978e;
+      --surface: #ffffff;
+      --surface-2: #f0ede8;
+      --border: rgba(28,26,23,0.1);
+      --border-med: rgba(28,26,23,0.18);
+      --c1: #e8542a;
+      --c2: #d4a20c;
+      --c3: #7b5ea7;
+      --c4: #2a7dd4;
+      --c5: #1a9e6e;
+      --c6: #c2410c;
+      --c7: #0ea5e9;
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Mono', monospace;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--ink);
+      color: #f5f3ee;
+      padding: 4rem 2rem 3rem;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 4px solid var(--c1);
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(232,84,42,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner { max-width: 820px; margin: 0 auto; position: relative; z-index: 1; }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--c1);
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(36px, 6vw, 60px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 i { font-style: italic; color: var(--c1); }
+
+    .hero-sub {
+      font-size: 14px;
+      color: rgba(245,243,238,0.6);
+      letter-spacing: 0.04em;
+      margin-bottom: 2.5rem;
+      max-width: 600px;
+    }
+
+    /* ── NAV PILLS ── */
+    .nav-pills { display: flex; flex-wrap: wrap; gap: 10px; }
+    .nav-pill {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 16px;
+      border-radius: 24px;
+      border: 1px solid rgba(245,243,238,0.2);
+      background: rgba(245,243,238,0.08);
+      color: rgba(245,243,238,0.8);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+    }
+    .nav-pill:hover { background: rgba(245,243,238,0.15); color: #fff; transform: translateY(-1px); }
+    .nav-pill.active { background: var(--c1); border-color: var(--c1); color: #fff; }
+    .nav-pill .num { font-size: 10px; opacity: 0.5; }
+
+    /* ── MAIN LAYOUT ── */
+    .main { max-width: 820px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+
+    /* ── TOOL SECTIONS ── */
+    .tool-section { margin-bottom: 4rem; scroll-margin-top: 2rem; }
+    .tool-header { display: flex; align-items: center; gap: 16px; margin-bottom: 1.5rem; }
+    .tool-num {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 600; flex-shrink: 0; color: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .tool-title { font-family: 'DM Serif Display', serif; font-size: 26px; letter-spacing: -0.01em; }
+    .tool-racf-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-top: 4px; }
+
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+
+    /* ── FORM ELEMENTS ── */
+    .field-group { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); }
+    .field-row { display: grid; gap: 16px; margin-bottom: 16px; }
+    .field-row-2 { grid-template-columns: 1fr 1fr; }
+    .field-row:last-child { margin-bottom: 0; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+
+    label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+    input, select, textarea {
+      width: 100%; padding: 12px 14px; font-size: 14px;
+      font-family: 'DM Mono', monospace; border: 1.5px solid var(--border-med);
+      border-radius: var(--radius-sm); background: var(--surface-2);
+      color: var(--ink); outline: none; transition: all 0.2s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--ink); background: var(--surface); box-shadow: 0 0 0 4px rgba(0,0,0,0.03); }
+
+    .btn-row { padding: 1.25rem 2rem; background: var(--surface-2); }
+    .run-btn {
+      width: 100%; padding: 14px; font-family: 'DM Mono', monospace;
+      font-size: 13px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; cursor: pointer; border: none;
+      border-radius: var(--radius-sm); color: #fff; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .run-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .run-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* ── FILE UPLOAD STYLES ── */
+    .file-upload-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100px;
+      border: 1.5px dashed var(--border-med);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-2);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .file-upload-wrapper:hover { border-color: var(--ink); background: var(--surface); }
+    .file-upload-wrapper input[type="file"] {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .photo-preview-box {
+      font-size: 11px;
+      color: var(--ink-3);
+      text-align: center;
+      padding: 10px;
+      pointer-events: none;
+    }
+    .photo-preview-box img {
+      max-height: 80px;
+      border-radius: 4px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* ── OUTPUT AREA ── */
+    .output-area { display: none; padding: 2rem; border-top: 1px solid var(--border); animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+    .output-area.visible { display: block; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .loading-msg { display: none; padding: 2rem; text-align: center; font-size: 12px; color: var(--ink-3); letter-spacing: 0.1em; }
+
+    /* ── OUTPUT COMPONENTS ── */
+    .out-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 12px; margin-top: 1.5rem; display: block; font-weight: 600; }
+    .out-label:first-child { margin-top: 0; }
+
+    .hooks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+    .hook-pill {
+      padding: 12px 16px; background: var(--surface-2); border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm); font-size: 14px; font-family: 'DM Serif Display', serif;
+      color: var(--ink); cursor: pointer; transition: all 0.2s; line-height: 1.4;
+    }
+    .hook-pill:hover { border-color: var(--ink); background: var(--surface); transform: scale(1.02); }
+
+    .post-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
+    .tab {
+      padding: 6px 18px; font-size: 11px; font-family: 'DM Mono', monospace;
+      letter-spacing: 0.06em; border: 1.5px solid var(--border-med); border-radius: 20px;
+      cursor: pointer; background: var(--surface); color: var(--ink-2); transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .tab.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+    .post-panel { display: none; }
+    .post-panel.active { display: block; }
+    .post-block {
+      background: var(--surface-2); border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1.25rem; font-size: 15px;
+      font-family: 'DM Serif Display', serif; line-height: 1.7; white-space: pre-wrap;
+      margin-bottom: 12px; color: var(--ink);
+    }
+
+    .cta-box { border: 1.5px solid var(--border); border-left: 4px solid currentColor; border-radius: var(--radius-sm); padding: 12px 16px; }
+    .cta-lbl { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; opacity: 0.7; font-weight: 700; }
+    .cta-body { font-size: 14px; font-family: 'DM Serif Display', serif; font-style: italic; }
+
+    /* Comment Ladder */
+    .ladder-line { display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; }
+    .ladder-line:hover { background: rgba(0,0,0,0.01); }
+    .ladder-step {
+      width: 28px; height: 28px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; flex-shrink: 0;
+      background: var(--ink); color: #fff;
+    }
+    .ladder-role { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 4px; font-weight: 700; }
+    .ladder-text { font-size: 14px; font-family: 'DM Serif Display', serif; line-height: 1.5; color: var(--ink); }
+
+    /* Profile conversion */
+    .profile-card { padding: 16px; background: var(--surface-2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 12px; }
+    .improvement-list { display: flex; flex-direction: column; gap: 8px; }
+    .impr-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px; background: #fff; border: 1px solid var(--border); border-radius: 8px; }
+    .impr-num { width: 22px; height: 22px; border-radius: 50%; background: var(--c5); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+
+    /* Image Tool */
+    .image-result-container { margin-top: 20px; text-align: center; }
+    .generated-image { width: 100%; border-radius: var(--radius-sm); border: 4px solid var(--ink); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2); max-width: 512px; margin: 0 auto; display: block; }
+    .prompt-box {
+      background: #111; color: #00ffaa; font-family: 'DM Mono', monospace;
+      padding: 12px; border-radius: 8px; font-size: 11px; text-align: left;
+      margin-top: 12px; border: 1px solid #333; cursor: pointer;
+      overflow-wrap: break-word;
+    }
+
+    /* Trends radar specific */
+    .trend-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      background: #fff;
+      transition: all 0.2s;
+    }
+    .trend-card:hover { border-color: var(--c7); transform: translateY(-2px); }
+    .trend-title { font-family: 'DM Serif Display', serif; font-size: 18px; margin-bottom: 8px; color: var(--ink); }
+    .trend-desc { font-size: 14px; color: var(--ink-2); line-height: 1.6; margin-bottom: 12px; }
+    .trend-meta { display: flex; justify-content: space-between; align-items: center; }
+    .trend-source { font-size: 10px; text-decoration: none; color: var(--c7); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+
+    .toast {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: var(--ink); color: #fff; padding: 10px 20px; border-radius: 30px;
+      font-size: 12px; z-index: 1000; opacity: 0; transition: opacity 0.3s; pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+
+    @media (max-width: 600px) {
+      .field-row-2 { grid-template-columns: 1fr; }
+      .hooks-grid { grid-template-columns: 1fr; }
+      .hero { padding: 3rem 1.5rem 2rem; }
+      .hero h1 { font-size: 32px; }
+      .main { padding: 2rem 1rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="toast" class="toast">Copied to clipboard!</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Gemini 2.5 Intelligence · RACF Enabled</div>
+    <h1>AI<i> Content</i><br>Productivity Pack</h1>
+    <p class="hero-sub">The ultimate creator toolkit for high-performance social content. Powered by the latest Gemini Flash models for instant, high-quality output.</p>
+    <nav class="nav-pills">
+      <a class="nav-pill active" href="#tool1"><span class="num">01</span> Viral Engine</a>
+      <a class="nav-pill" href="#tool2"><span class="num">02</span> 25 Hooks</a>
+      <a class="nav-pill" href="#tool3"><span class="num">03</span> Ladder</a>
+      <a class="nav-pill" href="#tool4"><span class="num">04</span> Rewriter</a>
+      <a class="nav-pill" href="#tool5"><span class="num">05</span> Profile</a>
+      <a class="nav-pill" href="#tool6"><span class="num">06</span> Image</a>
+      <a class="nav-pill" href="#tool7"><span class="num">07</span> Trends</a>
+    </nav>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ══ TOOL 1 ══ -->
+  <div class="tool-section" id="tool1">
+    <div class="tool-header">
+      <div class="tool-num" style="background:var(--c1)">01</div>
+      <div>
+        <div class="tool-title">Viral Content Engine</div>
+        <div class="tool-racf-label">Role · Action · Context · Format</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="field-group">
+        <div class="field-row field-row-2">
+          <div class="field"><label>Niche / Topic</label><input type="text" id="t1-niche" placeholder="e.g. Solopreneurship" value="Content Creation" /></div>
+          <div class="field"><label>Target Audience</label><input type="text" id="t1-audience" placeholder="e.g. Freelancers" value="Ambitious Creators" /></div>
+        </div>
+        <div class="field-row field-row-2">
+          <div class="field"><label>Goal</label>
+            <select id="t1-goal">
+              <option>Grow followers</option><option>Drive comments</option>
+              <option>Sell a product</option><option>Go viral</option>
+            </select>
+          </div>
+          <div class="field"><label>Primary Angle</label>
+            <select id="t1-style">
+              <option>Mixed Styles</option><option>Hard Truths</option>
+              <option>Results/Proof</option><option>The "How-to" Secret</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="run-btn" style="background:var(--c1)" id="t1-btn" onclick="runTool1()">Generate Content Pack</button>
+      </div>
+      <div class="loading-msg" id="t1-loading">Synthesizing viral structures...</div>
+      <div class="output-area" id="t1-out">
+        <span class="out-label">Viral Hooks (Click to copy)</span>
+        <div class="hooks-grid" id="t1-hooks"></div>
+        <span class="out-label">Content Templates</span>
+        <div class="post-tabs" id="t1-tabs">
+          <div class="tab active" onclick="switchPostTab('t1',0)">Educational</div>
+          <div class="tab" onclick="switchPostTab('t1',1)">Controversial</div>
+          <div class="tab" onclick="switchPostTab('t1',2)">Direct Ask</div>
+        </div>
+        <div id="t1-panels"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TOOL 2 ══ -->
+  <div class="tool-section" id="tool2">
+    <div class="tool-header">
+      <div class="tool-num" style="background:var(--c2)">02</div>
+      <div>
+        <div class="tool-title">The 25-Hook Matrix</div>
+        <div class="tool-racf-label">Scroll-Stopping Category Logic</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="field-group">
+        <div class="field-row"><div class="field"><label>Topic</label><input type="text" id="t2-topic" placeholder="e.g. why most people fail at..." /></div></div>
+      </div>
+      <div class="btn-row">
+        <button class="run-btn" style="background:var(--c2)" id="t2-btn" onclick="runTool2()">Generate 25 Hooks</button>
+      </div>
+      <div class="loading-msg" id="t2-loading">Calculating high-retention patterns...</div>
+      <div class="output-area" id="t2-out">
+        <div id="t2-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TOOL 3 ══ -->
+  <div class="tool-section" id="tool3">
+    <div class="tool-header">
+      <div class="tool-num" style="background:var(--c3)">03</div>
+      <div>
+        <div class="tool-title">Comment Ladder Builder</div>
+        <div class="tool-racf-label">Engagement Velocity Framework</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="field-group">
+        <div class="field-row"><div class="field"><label>The Main "Win" of your post</label><input type="text" id="t3-win" placeholder="e.g. shared my 5-step productivity morning" /></div></div>
+      </div>
+      <div class="btn-row">
+        <button class="run-btn" style="background:var(--c3)" id="t3-btn" onclick="runTool3()">Build Interaction Sequence</button>
+      </div>
+      <div class="loading-msg" id="t3-loading">Sequencing engagement triggers...</div>
+      <div class="output-area" id="t3-out">
+        <div id="t3-ladder"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TOOL 4 ══ -->
+  <div class="tool-section" id="tool4">
+    <div class="tool-header">
+      <div class="tool-num" style="background:var(--c4)">04</div>
+      <div>
+        <div class="tool-title">Viral Rewrite Engine</div>
+        <div class="tool-racf-label">Tone · Clarity · Tension · Hook</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="field-group">
+        <div class="field-row"><div class="field"><label>Original Draft</label><textarea id="t4-input" rows="5" placeholder="Paste your boring post here..."></textarea></div></div>
+      </div>
+      <div class="btn-row">
+        <button class="run-btn" style="background:var(--c4)" id="t4-btn" onclick="runTool4()">Upgrade for Virality</button>
+      </div>
+      <div class="loading-msg" id="t4-loading">Injecting tension and clarity...</div>
+      <div class="output-area" id="t4-out">
+        <div id="t4-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TOOL 5 ══ -->
+  <div class="tool-section" id="tool5">
+    <div class="tool-header">
+      <div class="tool-num" style="background:var(--c5)">05</div>
+      <div>
+        <div class="tool-title">Profile Optimizer</div>
+        <div class="tool-racf-label">Social Proof · Authority · Clarity</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="field-group">
+        <div class="field-row"><div class="field"><label>Current Bio / About</label><textarea id="t5-bio" rows="4" placeholder="Your current bio..."></textarea></div></div>
+      </div>
+      <div class="btn-row">
+        <button class="run-btn" style="background:var(--c5)" id="t5-btn" onclick="runTool5()">Optimize Conversions</button>
+      </div>
+      <div class="loading-msg" id="t5-loading">Auditing profile authority...</div>
+      <div class="output-area" id="t5-out">
+        <div id="t5-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TOOL 6 ══ -->
+  <div class="tool-section" id="tool6">
+    <div class="tool-header">
+      <div class="tool-num" style="background:var(--c6)">06</div>
+      <div>
+        <div class="tool-title">Viral Visual Generator</div>
+        <div class="tool-racf-label">Breaking Style · Personal Photo Support · Neon Impact</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="field-group">
+        <div class="field-row field-row-2">
+          <div class="field"><label>Main Viral Topic</label><input type="text" id="t6-topic" placeholder="e.g. AI is replacing developers" /></div>
+          <div class="field"><label>Visual Setting</label>
+            <select id="t6-mood">
+              <option value="Modern Studio">Modern Studio (Newsroom)</option>
+              <option value="Tropical Oasis">Tropical Oasis (Luxury)</option>
+              <option value="Epic Mountains">Epic Mountains (Dramatic)</option>
+              <option value="High-Tech Lab">High-Tech Lab (Futuristic)</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Your Photo (Optional - for Likeness)</label>
+            <div class="file-upload-wrapper">
+              <input type="file" id="t6-photo" accept="image/*" onchange="handlePhotoUpload(this)" />
+              <div id="t6-photo-preview" class="photo-preview-box">Click to upload personal photo</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="run-btn" style="background:var(--c6)" id="t6-btn" onclick="runTool6()">Generate Viral Template</button>
+      </div>
+      <div class="loading-msg" id="t6-loading">Designing viral breaking news visual...</div>
+      <div class="output-area" id="t6-out">
+        <div id="t6-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TOOL 7: TRENDS RADAR ══ -->
+  <div class="tool-section" id="tool7">
+    <div class="tool-header">
+      <div class="tool-num" style="background:var(--c7)">07</div>
+      <div>
+        <div class="tool-title">AI News Trends Radar</div>
+        <div class="tool-racf-label">Real-time Grounding · News Synthesis</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="field-group">
+        <div class="field-row">
+          <div class="field">
+            <label>News Category / Keyword</label>
+            <input type="text" id="t7-query" placeholder="e.g. Large Language Models, AI Regulation, OpenAI updates" value="Latest AI Trends" />
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="run-btn" style="background:var(--c7)" id="t7-btn" onclick="runTool7()">Scan AI Horizon</button>
+      </div>
+      <div class="loading-msg" id="t7-loading">Connecting to search fabric for live updates...</div>
+      <div class="output-area" id="t7-out">
+        <div id="t7-content"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const apiKey = ""; // Provided by environment
+  let uploadedPhotoBase64 = null;
+
+  // ── CORE UTILS ──
+  function showToast() {
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  function copy(text) {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast();
+  }
+
+  function handlePhotoUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64 = e.target.result;
+      uploadedPhotoBase64 = base64.split(',')[1];
+      const preview = document.getElementById('t6-photo-preview');
+      preview.innerHTML = `<img src="${base64}" />`;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function callGemini(userPrompt, systemPrompt, schema, useSearch = false) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+    const payload = {
+      contents: [{ parts: [{ text: userPrompt }] }],
+      systemInstruction: { parts: [{ text: systemPrompt }] },
+      generationConfig: {
+        responseMimeType: "application/json",
+        responseSchema: schema
+      }
+    };
+
+    if (useSearch) {
+      payload.tools = [{ "google_search": {} }];
+    }
+
+    let lastErr;
+    for (let i = 0; i < 5; i++) {
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('API Error');
+        const data = await res.json();
+
+        const text = data.candidates[0].content.parts[0].text;
+        const sources = data.candidates?.[0]?.groundingMetadata?.groundingAttributions?.map(a => ({
+          uri: a.web?.uri,
+          title: a.web?.title
+        })) || [];
+
+        return {
+          json: JSON.parse(text),
+          sources
+        };
+      } catch (err) {
+        lastErr = err;
+        await new Promise(r => setTimeout(r, Math.pow(2, i) * 1000));
+      }
+    }
+    throw lastErr;
+  }
+
+  async function generateImage(prompt) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`;
+    const payload = { instances: { prompt }, parameters: { sampleCount: 1 } };
+    const res = await fetch(url, { method: 'POST', body: JSON.stringify(payload) });
+    const data = await res.json();
+    return `data:image/png;base64,${data.predictions[0].bytesBase64Encoded}`;
+  }
+
+  async function performImageToImage(prompt, base64Image) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${apiKey}`;
+    const payload = {
+      contents: [{
+        parts: [
+          { text: prompt },
+          { inlineData: { mimeType: "image/png", data: base64Image } }
+        ]
+      }],
+      generationConfig: {
+        responseModalities: ['TEXT', 'IMAGE']
+      }
+    };
+    const res = await fetch(url, { method: 'POST', body: JSON.stringify(payload) });
+    const data = await res.json();
+    const base64 = data.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
+    return base64 ? `data:image/png;base64,${base64}` : null;
+  }
+
+  function toggleLoading(id, isLoading) {
+    document.getElementById(`${id}-loading`).style.display = isLoading ? 'block' : 'none';
+    document.getElementById(`${id}-btn`).disabled = isLoading;
+    if (isLoading) document.getElementById(`${id}-out`).classList.remove('visible');
+  }
+
+  // ── TOOL 1: VIRAL ENGINE ──
+  async function runTool1() {
+    const niche = document.getElementById('t1-niche').value;
+    const audience = document.getElementById('t1-audience').value;
+    const goal = document.getElementById('t1-goal').value;
+    const style = document.getElementById('t1-style').value;
+
+    toggleLoading('t1', true);
+    try {
+      const schema = {
+        type: "OBJECT",
+        properties: {
+          hooks: { type: "ARRAY", items: { type: "STRING" } },
+          posts: {
+            type: "ARRAY",
+            items: {
+              type: "OBJECT",
+              properties: {
+                label: { type: "STRING" },
+                body: { type: "STRING" },
+                cta: { type: "STRING" }
+              }
+            }
+          }
+        }
+      };
+
+      const result = await callGemini(
+              `Niche: ${niche}, Audience: ${audience}, Goal: ${goal}, Style: ${style}`,
+              "You are an elite viral strategist. Generate 5 punchy hooks and 3 post templates. Make them high-engagement and tailored to the audience.",
+              schema
+      );
+      const data = result.json;
+
+      const hookGrid = document.getElementById('t1-hooks');
+      hookGrid.innerHTML = data.hooks.map(h => `<div class="hook-pill" onclick="copy('${h.replace(/'/g, "\\'")}')">${h}</div>`).join('');
+
+      const panels = document.getElementById('t1-panels');
+      panels.innerHTML = data.posts.map((p, i) => `
+                <div id="t1-panel-${i}" class="post-panel ${i === 0 ? 'active' : ''}">
+                    <div class="post-block" onclick="copy(this.innerText)">${p.body}</div>
+                    <div class="cta-box" style="color:var(--c1)">
+                        <div class="cta-lbl">Call to Action</div>
+                        <div class="cta-body" onclick="copy(this.innerText)">${p.cta}</div>
+                    </div>
+                </div>
+            `).join('');
+
+      document.getElementById('t1-out').classList.add('visible');
+    } catch (e) { alert("Generation failed. Check connection."); }
+    toggleLoading('t1', false);
+  }
+
+  function switchPostTab(tool, idx) {
+    document.querySelectorAll(`#${tool}-tabs .tab`).forEach((t, i) => {
+      t.classList.toggle('active', i === idx);
+    });
+    document.querySelectorAll(`#${tool}-panels .post-panel`).forEach((p, i) => {
+      p.classList.toggle('active', i === idx);
+    });
+  }
+
+  // ── TOOL 2: 25 HOOKS ──
+  async function runTool2() {
+    const topic = document.getElementById('t2-topic').value;
+    toggleLoading('t2', true);
+    try {
+      const schema = {
+        type: "OBJECT",
+        properties: {
+          categories: {
+            type: "ARRAY",
+            items: {
+              type: "OBJECT",
+              properties: {
+                name: { type: "STRING" },
+                hooks: { type: "ARRAY", items: { type: "STRING" } }
+              }
+            }
+          }
+        }
+      };
+      const result = await callGemini(
+              `Topic: ${topic}`,
+              "Generate 25 high-performing hooks split into 5 categories: Negative/Fear, Result/Proof, Question, Curiosity, and Listicle.",
+              schema
+      );
+      const data = result.json;
+      const container = document.getElementById('t2-content');
+      container.innerHTML = data.categories.map(cat => `
+                <span class="out-label">${cat.name}</span>
+                <div class="hooks-grid">${cat.hooks.map(h => `<div class="hook-pill" onclick="copy('${h.replace(/'/g, "\\'")}')">${h}</div>`).join('')}</div>
+            `).join('');
+      document.getElementById('t2-out').classList.add('visible');
+    } catch (e) { console.error(e); }
+    toggleLoading('t2', false);
+  }
+
+  // ── TOOL 3: COMMENT LADDER ──
+  async function runTool3() {
+    const win = document.getElementById('t3-win').value;
+    toggleLoading('t3', true);
+    try {
+      const schema = {
+        type: "OBJECT",
+        properties: {
+          steps: {
+            type: "ARRAY",
+            items: {
+              type: "OBJECT",
+              properties: {
+                role: { type: "STRING" },
+                text: { type: "STRING" }
+              }
+            }
+          }
+        }
+      };
+      const result = await callGemini(
+              `Post focus: ${win}`,
+              "Create a 5-step comment ladder for a post. Step 1: Broad question. Step 2: Specific value hint. Step 3: Curiosity loop. Step 4: Controversy/Opinion. Step 5: High-friction CTA.",
+              schema
+      );
+      const data = result.json;
+      const container = document.getElementById('t3-ladder');
+      container.innerHTML = data.steps.map((s, i) => `
+                <div class="ladder-line" onclick="copy('${s.text.replace(/'/g, "\\'")}')">
+                    <div class="ladder-step">${i+1}</div>
+                    <div>
+                        <div class="ladder-role">${s.role}</div>
+                        <div class="ladder-text">${s.text}</div>
+                    </div>
+                </div>
+            `).join('');
+      document.getElementById('t3-out').classList.add('visible');
+    } catch (e) { console.error(e); }
+    toggleLoading('t3', false);
+  }
+
+  // ── TOOL 4: REWRITE ENGINE ──
+  async function runTool4() {
+    const input = document.getElementById('t4-input').value;
+    toggleLoading('t4', true);
+    try {
+      const schema = {
+        type: "OBJECT",
+        properties: {
+          variants: {
+            type: "ARRAY",
+            items: {
+              type: "OBJECT",
+              properties: {
+                tone: { type: "STRING" },
+                content: { type: "STRING" }
+              }
+            }
+          }
+        }
+      };
+      const result = await callGemini(
+              `Draft: ${input}`,
+              "Rewrite the following draft into 3 high-impact variants: One punchy/minimalist, one value-heavy/long, and one controversial/edgy.",
+              schema
+      );
+      const data = result.json;
+      const container = document.getElementById('t4-content');
+      container.innerHTML = data.variants.map(v => `
+                <span class="out-label">${v.tone} Variant</span>
+                <div class="post-block" onclick="copy(this.innerText)">${v.content}</div>
+            `).join('');
+      document.getElementById('t4-out').classList.add('visible');
+    } catch (e) { console.error(e); }
+    toggleLoading('t4', false);
+  }
+
+  // ── TOOL 5: PROFILE OPTIMIZER ──
+  async function runTool5() {
+    const bio = document.getElementById('t5-bio').value;
+    toggleLoading('t5', true);
+    try {
+      const schema = {
+        type: "OBJECT",
+        properties: {
+          optimizedBio: { type: "STRING" },
+          improvements: { type: "ARRAY", items: { type: "STRING" } },
+          headline: { type: "STRING" }
+        }
+      };
+      const result = await callGemini(
+              `Current Bio: ${bio}`,
+              "Analyze this social media bio. Provide an optimized version and 4 specific improvements based on conversions and authority.",
+              schema
+      );
+      const data = result.json;
+      const container = document.getElementById('t5-content');
+      container.innerHTML = `
+                <span class="out-label">New Headline</span>
+                <div class="post-block" onclick="copy(this.innerText)">${data.headline}</div>
+                <span class="out-label">Optimized Bio</span>
+                <div class="profile-card" onclick="copy(this.innerText)">${data.optimizedBio}</div>
+                <span class="out-label">Actionable Improvements</span>
+                <div class="improvement-list">${data.improvements.map((im, i) => `
+                    <div class="impr-item"><div class="impr-num">${i+1}</div><div class="ladder-text">${im}</div></div>
+                `).join('')}</div>
+            `;
+      document.getElementById('t5-out').classList.add('visible');
+    } catch (e) { console.error(e); }
+    toggleLoading('t5', false);
+  }
+
+  // ── TOOL 6: IMAGE GENERATOR ──
+  async function runTool6() {
+    const topic = document.getElementById('t6-topic').value;
+    const setting = document.getElementById('t6-mood').value;
+    toggleLoading('t6', true);
+    try {
+      const schema = {
+        type: "OBJECT",
+        properties: {
+          imagePrompt: { type: "STRING" },
+          headlines: { type: "ARRAY", items: { type: "STRING" } },
+          visualStrategy: { type: "STRING" }
+        }
+      };
+
+      const systemPrompt = `You are a viral social media image strategist. Your goal is to create a design strategy and prompt for a "Viral Breaking News" style template.
+            Visual Style Guidelines:
+            1. SUBJECT: If an image is provided, transform that person to have an extremely surprised, shocked, or "mind-blown" facial expression. If no image, generate a new shocked subject.
+            2. ELEMENTS: Include a red rounded rectangle badge with the word "BREAKING" in white bold letters in the top corner.
+            3. TYPOGRAPHY: Massive, bold, white sans-serif text overlay across the center/bottom.
+            4. HIGHLIGHTS: One or two critical words in the headline must be bright neon lime green (#00ff00).
+            5. COMPOSITION: High contrast, cinematic lighting, dramatic background related to the setting: ${setting}.
+            6. ORIENTATION: 1:1 Square aspect ratio for Instagram/Facebook/LinkedIn.`;
+
+      const result = await callGemini(
+              `Viral Topic: ${topic}, Setting: ${setting}`,
+              systemPrompt,
+              schema
+      );
+      const data = result.json;
+
+      let imageUrl;
+      if (uploadedPhotoBase64) {
+        imageUrl = await performImageToImage(data.imagePrompt, uploadedPhotoBase64);
+      } else {
+        imageUrl = await generateImage(data.imagePrompt);
+      }
+
+      const container = document.getElementById('t6-content');
+      container.innerHTML = `
+                <div class="post-block" style="background:#fff">
+                    <strong>Visual Strategy:</strong> ${data.visualStrategy}
+                    <br><br>
+                    <strong>Suggested Headline Variants:</strong>
+                    <ul>${data.headlines.map(h => `<li>${h}</li>`).join('')}</ul>
+                </div>
+                <div class="image-result-container">
+                    ${imageUrl ? `<img src="${imageUrl}" class="generated-image" alt="Generated visual" />` : '<p>Image generation failed.</p>'}
+                    <div class="out-label">Final Image Generation Prompt (Click to copy)</div>
+                    <div class="prompt-box" onclick="copy(this.innerText)">
+                        ${data.imagePrompt}
+                    </div>
+                </div>
+            `;
+      document.getElementById('t6-out').classList.add('visible');
+    } catch (e) { console.error(e); }
+    toggleLoading('t6', false);
+  }
+
+  // ── TOOL 7: TRENDS RADAR ──
+  async function runTool7() {
+    const query = document.getElementById('t7-query').value;
+    toggleLoading('t7', true);
+    try {
+      const schema = {
+        type: "OBJECT",
+        properties: {
+          trends: {
+            type: "ARRAY",
+            items: {
+              type: "OBJECT",
+              properties: {
+                title: { type: "STRING" },
+                summary: { type: "STRING" },
+                whyTrending: { type: "STRING" }
+              }
+            }
+          }
+        }
+      };
+
+      const result = await callGemini(
+              `Find the top 3-5 latest news trends for: ${query}. Focus on events from the last 7 days.`,
+              "You are an AI news analyst with real-time search capabilities. Identify and summarize the most impactful recent trends. Keep it objective and data-driven.",
+              schema,
+              true // Enable Google Search
+      );
+
+      const data = result.json;
+      const sources = result.sources;
+
+      const container = document.getElementById('t7-content');
+      container.innerHTML = data.trends.map((t, i) => `
+                <div class="trend-card">
+                    <div class="trend-title">${t.title}</div>
+                    <div class="trend-desc">${t.summary}</div>
+                    <div class="cta-lbl">Why it's trending</div>
+                    <div class="trend-desc" style="font-style:italic; font-size:12px;">${t.whyTrending}</div>
+                    <div class="trend-meta">
+                        <button class="tab" onclick="copy('${t.title.replace(/'/g, "\\'")}: ${t.summary.replace(/'/g, "\\'")}')">Copy Summary</button>
+                        ${sources[i] ? `<a href="${sources[i].uri}" target="_blank" class="trend-source">Source: ${sources[i].title || 'Link'}</a>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+      document.getElementById('t7-out').classList.add('visible');
+    } catch (e) {
+      console.error(e);
+      document.getElementById('t7-content').innerHTML = '<p style="padding:20px; color:red;">Failed to fetch live trends. Please try again later.</p>';
+      document.getElementById('t7-out').classList.add('visible');
+    }
+    toggleLoading('t7', false);
+  }
+
+  // Scroll active link effect
+  window.addEventListener('scroll', () => {
+    let current = "";
+    document.querySelectorAll('.tool-section').forEach(section => {
+      const sectionTop = section.offsetTop;
+      if (pageYOffset >= sectionTop - 100) {
+        current = section.getAttribute("id");
+      }
+    });
+    document.querySelectorAll('.nav-pill').forEach(pill => {
+      pill.classList.toggle('active', pill.getAttribute("href") === `#${current}`);
+    });
+  });
+</script>
+</body>
+</html>

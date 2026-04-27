@@ -69,14 +69,6 @@ const ViralLanding = () => {
       buttonText: 'Run The System',
       best: true,
       features: ['Daily posting structure', 'What to post + when', "What’s trending right now", 'Full execution system']
-    },
-    {
-      name: '$99/mo',
-      priceLabel: '$99/mo',
-      tagline: 'Full Operating System',
-      description: 'Everything. No gaps.',
-      buttonText: 'Unlock Full Access',
-      features: ['Strategy + data breakdown', 'Performance insights', 'Full automation tools', 'All systems combined']
     }
   ];
 
@@ -165,6 +157,8 @@ const ViralLanding = () => {
     ? { hidden: { opacity: 1, y: 0 }, show: { opacity: 1, y: 0 } }
     : { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.35 } } };
 
+  const [planFree, plan7, plan27, plan47] = plans;
+
   return (
     <div className="bg-black text-white">
       <div ref={scrollRef} className="h-screen overflow-y-auto snap-y snap-mandatory scroll-smooth">
@@ -250,7 +244,7 @@ const ViralLanding = () => {
             variants={pricingContainer}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, amount: 0.35 }}
+            viewport={{ root: scrollRef, once: true, amount: 0.35 }}
             className="text-center pt-24 md:pt-32 max-w-4xl mx-auto space-y-5 relative z-10"
           >
             <motion.h2
@@ -274,70 +268,123 @@ const ViralLanding = () => {
             variants={pricingContainer}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, amount: 0.25 }}
-            className="relative z-10 grid md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto py-10 md:py-14"
+            viewport={{ root: scrollRef, once: true, amount: 0.25 }}
+            className="relative z-10 max-w-6xl mx-auto py-10 md:py-14 space-y-4"
           >
-            {plans.map((plan) => (
-              <motion.div
-                key={plan.name}
-                variants={pricingItem}
-                className={[
-                  "relative text-white border border-white/10 rounded-2xl p-6",
-                  "bg-gradient-to-r from-neutral-950 via-neutral-900 to-neutral-950",
-                  plan.popular ? "shadow-[0_-13px_220px_0px_rgba(9,0,255,0.35)] ring-1 ring-blue-500/30" : "",
-                  plan.best ? "ring-1 ring-white/25" : ""
-                ].join(" ")}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] rounded-full border border-blue-300/40">
-                    Popular
-                  </div>
-                )}
-                {plan.best && !plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-black px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] rounded-full border border-white/40">
-                    Best Value
-                  </div>
-                )}
+            <div className="grid md:grid-cols-3 gap-4 items-stretch">
+              {/* Mobile order: featured first */}
+              {[planFree, plan27, plan7].map((plan) => {
+                const featured = plan === plan27;
+                const order =
+                  plan === plan27
+                    ? 'order-1 md:order-2'
+                    : plan === planFree
+                      ? 'order-2 md:order-1'
+                      : 'order-3 md:order-3';
 
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <div className="text-3xl font-black">{plan.priceLabel}</div>
-                    <div className="mt-1 text-sm font-black uppercase tracking-wider text-white/60">{plan.tagline}</div>
-                  </div>
-                </div>
+                return (
+                  <motion.div
+                    key={plan.name}
+                    variants={pricingItem}
+                    className={[
+                      order,
+                      "relative text-white border border-white/10 rounded-2xl p-6",
+                      "bg-gradient-to-r from-neutral-950 via-neutral-900 to-neutral-950",
+                      featured ? "md:-translate-y-2 md:scale-[1.03] z-20 shadow-[0_-13px_260px_0px_rgba(9,0,255,0.45)] ring-1 ring-blue-500/35" : "",
+                      plan.best ? "ring-1 ring-white/25" : ""
+                    ].join(" ")}
+                  >
+                    {plan.popular && (
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] rounded-full border border-blue-300/40">
+                        Popular
+                      </div>
+                    )}
+                    {plan.best && !plan.popular && (
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-black px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] rounded-full border border-white/40">
+                        Best Value
+                      </div>
+                    )}
 
-                <div className="mt-4 text-sm md:text-base text-white/70">{plan.description}</div>
+                    <div>
+                      <div className="text-3xl font-black">{plan.priceLabel}</div>
+                      <div className="mt-1 text-sm font-black uppercase tracking-wider text-white/60">{plan.tagline}</div>
+                    </div>
 
-                <button
+                    <div className="mt-4 text-sm md:text-base text-white/70">{plan.description}</div>
+
+                    <button
+                      className={[
+                        "w-full mt-6 py-4 rounded-xl font-black uppercase tracking-wider border transition-all",
+                        plan.popular
+                          ? "bg-gradient-to-t from-blue-600 to-blue-500 border-blue-400/60 shadow-[0_10px_40px_rgba(37,99,235,0.35)] hover:brightness-110"
+                          : "bg-transparent border-white/20 hover:bg-white hover:text-black"
+                      ].join(" ")}
+                    >
+                      {plan.buttonText}
+                    </button>
+
+                    <div className="mt-6 pt-5 border-t border-white/10">
+                      <ul className="space-y-2">
+                        {plan.features.map((feature, i) => (
+                          <li key={i} className="flex items-start gap-3 text-white/70">
+                            <span className="mt-2 h-2 w-2 rounded-full bg-white/30" />
+                            <span className="text-sm leading-snug">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            <div className="grid md:grid-cols-1 gap-4 items-stretch">
+              {[plan47].map((plan) => (
+                <motion.div
+                  key={plan.name}
+                  variants={pricingItem}
                   className={[
-                    "w-full mt-6 py-4 rounded-xl font-black uppercase tracking-wider border transition-all",
-                    plan.popular
-                      ? "bg-gradient-to-t from-blue-600 to-blue-500 border-blue-400/60 shadow-[0_10px_40px_rgba(37,99,235,0.35)] hover:brightness-110"
-                      : "bg-transparent border-white/20 hover:bg-white hover:text-black"
+                    "relative text-white border border-white/10 rounded-2xl p-7 md:p-8",
+                    "bg-gradient-to-r from-neutral-950 via-neutral-900 to-neutral-950",
+                    plan.best ? "ring-1 ring-white/25" : ""
                   ].join(" ")}
                 >
-                  {plan.buttonText}
-                </button>
+                  {plan.best && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white text-black px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] rounded-full border border-white/40">
+                      Best Value
+                    </div>
+                  )}
+                  <div>
+                    <div className="text-3xl md:text-4xl font-black">{plan.priceLabel}</div>
+                    <div className="mt-1 text-sm font-black uppercase tracking-wider text-white/60">{plan.tagline}</div>
+                  </div>
 
-                <div className="mt-6 pt-5 border-t border-white/10">
-                  <ul className="space-y-2">
-                    {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-3 text-white/70">
-                        <span className="mt-2 h-2 w-2 rounded-full bg-white/30" />
-                        <span className="text-sm leading-snug">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </motion.div>
-            ))}
+                  <div className="mt-4 text-sm md:text-base text-white/70 max-w-xl">{plan.description}</div>
+
+                  <button className="w-full mt-6 py-4 rounded-xl font-black uppercase tracking-wider border bg-transparent border-white/20 hover:bg-white hover:text-black transition-all">
+                    {plan.buttonText}
+                  </button>
+
+                  <div className="mt-6 pt-5 border-t border-white/10">
+                    <ul className="space-y-2">
+                      {plan.features.map((feature, i) => (
+                        <li key={i} className="flex items-start gap-3 text-white/70">
+                          <span className="mt-2 h-2 w-2 rounded-full bg-white/30" />
+                          <span className="text-sm leading-snug">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
 
           <motion.div
             variants={pricingContainer}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ root: scrollRef, once: true, amount: 0.2 }}
             className="relative z-10 pb-16 text-center max-w-3xl mx-auto"
           >
             <motion.p variants={pricingItem} className="text-white/80 text-xl md:text-2xl font-black">
